@@ -1,6 +1,4 @@
 <script setup>
-import { useAttrs } from "vue";
-
 const props = defineProps({
   iconName: {
     type: String,
