@@ -6,13 +6,13 @@ const props = defineProps({
   },
   size: {
     type: String,
-    default: "6",
+    default: "16",
   },
 });
 </script>
 
 <template>
-  <i :class="['material-icons', `w-${size} h-${size}`]">
+  <i class="material-icons" :style="{ fontSize: size + 'px' }">
     {{ iconName }}
   </i>
 </template>

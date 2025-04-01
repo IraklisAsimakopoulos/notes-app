@@ -12,18 +12,10 @@
     :type="type"
     @click="$emit('click', $event)"
   >
-    <Icon
-      v-if="icon && iconPosition === 'left'"
-      class="text-[16px]"
-      :icon-name="icon"
-    />
+    <Icon v-if="icon && iconPosition === 'left'" :icon-name="icon" />
     <slot />
-    <Icon
-      v-if="icon && iconPosition === 'right'"
-      class="text-[16px]"
-      :icon-name="icon"
-    />
-    <Icon v-if="iconOnly" class="text-[16px]" :icon-name="iconOnly" />
+    <Icon v-if="icon && iconPosition === 'right'" :icon-name="icon" />
+    <Icon v-if="iconOnly" :icon-name="iconOnly" />
   </button>
 </template>
 
