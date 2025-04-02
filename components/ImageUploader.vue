@@ -24,7 +24,7 @@
 
       <template v-if="!selectedFile">
         <div
-          class="w-12 h-12 bg-[#007AFF] rounded-[8px] flex items-center justify-center mb-4"
+          class="w-[40px] h-[40px] bg-[#007AFF] rounded-[8px] flex items-center justify-center mb-[14px]"
         >
           <svg
             width="20"
@@ -43,7 +43,7 @@
           </svg>
         </div>
         <p
-          class="text-center text-sm font-medium mb-1"
+          class="text-center text-sm font-medium mb-[4px] leading-[18px]"
           :class="[
             {
               'text-[#007AFF]': !error || selectedFile,
@@ -54,7 +54,7 @@
           Click to upload
           <span class="text-[#070707] font-normal">or drag and drop</span>
         </p>
-        <p class="text-center text-[#070707] text-sm">
+        <p class="text-center text-[#070707] text-sm leading-[18px]">
           {{ extensions }} (max. {{ props.maxWidth }}x{{ props.maxHeight }}px)
         </p>
       </template>

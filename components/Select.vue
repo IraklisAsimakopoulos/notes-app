@@ -1,6 +1,7 @@
 <template>
   <div class="w-full" ref="dropdownRef">
     <label
+      v-if="label"
       :class="[
         'block text-[14px] font-medium mb-[6px]',
         {
@@ -17,7 +18,7 @@
     <div
       @click="toggleDropdown"
       :class="[
-        'flex items-center relative w-full min-h-[59px] outline-none border rounded-[16px] p-2 cursor-pointer',
+        'flex items-center relative w-full min-h-[56px] outline-none border rounded-[16px] p-2 cursor-pointer',
         {
           'text-[#7D7D7D]': !modelValueHasValue,
           'border-[#007AFF] shadow-[0_0_0_3px_#D9EBFF] bg-[#FFF]':
@@ -38,17 +39,12 @@
           class="bg-[#007AFF26] text-[#070707] px-3 py-2 rounded-full text-xs flex items-center gap-[10px]"
         >
           <span>{{ option.label }}</span>
-          <button
-            type="button"
+          <Icon
             @click.stop="removeOption(option)"
-            class="w-[12px] h-[12px] m-0"
-          >
-            <Icon
-              size="12"
-              icon-name="close"
-              class="text-[#7D7D7D] hover:text-[#070707]"
-            />
-          </button>
+            size="12"
+            icon-name="close"
+            class="text-[#7D7D7D] hover:text-[#070707]"
+          />
         </span>
         <span
           v-if="selectedOptions.length > 2"
@@ -126,6 +122,7 @@
     </div>
 
     <div
+      v-if="supportingText"
       :class="[
         'text-[12px] py-0 px-[16px] text-[#6b7280] mt-[4px]',
         { 'text-[#FF3B30]': error && !modelValueHasValue },

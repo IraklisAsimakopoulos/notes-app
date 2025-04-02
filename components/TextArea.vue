@@ -1,6 +1,7 @@
 <template>
   <div class="w-full">
     <label
+      v-if="label"
       :class="[
         'block text-[14px] font-medium mb-[6px]',
         {
@@ -30,7 +31,7 @@
       <textarea
         :class="[
           textAreaClasses,
-          'min-h-[59px]  caret-[#007AFF] resize-y bg-transparent placeholder:text-[#7D7D7D]',
+          'min-h-[97px]  caret-[#007AFF] resize-y bg-transparent placeholder:text-[#7D7D7D]',
         ]"
         v-model="model"
         :placeholder="placeholder"
@@ -41,6 +42,7 @@
     </div>
 
     <div
+      v-if="supportingText"
       :class="[
         'text-[12px] py-0 px-[16px] text-[#6b7280] mt-[4px]',
         { 'text-[#FF3B30]': error && !modelValue },
