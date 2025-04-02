@@ -1,8 +1,8 @@
 <template>
   <div
-    class="flex flex-col gap-[22px] bg-[#ffffff] rounded-[16px] shadow-[0_8px_36px_0_#3A395912] p-[22px] w-full max-h-[380px]"
+    class="flex flex-col gap-[22px] bg-[#ffffff] rounded-[16px] shadow-[0_8px_36px_0_#3A395912] p-[22px] w-full h-[380px]"
   >
-    <h2 class="text-[17px] font-[590] text-[#070707] line-clamp-1">
+    <h2 class="text-[17px] font-[590] text-[#070707] line-clamp-1 min-h-[22px]">
       {{ title }}
     </h2>
 
@@ -14,11 +14,11 @@
     />
 
     <div
-      class="text-[#070707] leading-[140%] flex flex-col gap-[8px]"
+      class="text-[#070707] leading-[140%] flex flex-col gap-[8px] overflow-y-auto w-full text-ellipsis"
       :class="[
         {
-          'h-[288px] overflow-y-auto text-ellipsis': type === '1',
-          'line-clamp-4': type === '2' || type === '3',
+          'h-[288px] ': type === '1',
+          'h-[110px]': type === '2' || type === '3',
         },
       ]"
     >
@@ -29,7 +29,7 @@
 
     <div
       v-if="type === '3' && options.length > 0"
-      class="mt-4 flex flex-col gap-[8px]"
+      class="mt-4 flex flex-col gap-[8px] max-h-[110px] overflow-y-auto w-full text-ellipsis"
     >
       <div
         v-for="(option, index) in options"
@@ -50,7 +50,7 @@
         />
         <label
           :for="`option-${index}`"
-          class="text-[#0A0C11] leading-[140%] line-clamp-4"
+          class="text-[#0A0C11] leading-[140%] line-clamp-3"
         >
           {{ option.text }}
         </label>

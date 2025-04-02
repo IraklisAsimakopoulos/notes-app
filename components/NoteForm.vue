@@ -86,6 +86,8 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { useNotesStore } from "../store/useNotesStore";
+import { v4 as uuidv4 } from "uuid";
 
 const typeOptions = [
   { value: "1", label: "Default Note" },
@@ -100,11 +102,6 @@ const props = defineProps({
   },
   onClose: {
     type: Function,
-  },
-
-  onSubmit: {
-    type: [Function, null],
-    default: null,
   },
 });
 
@@ -138,27 +135,66 @@ const isDisabled = computed(() => {
   return false;
 });
 
+const notesStore = useNotesStore();
+
 const handleSubmit = () => {
   if (isDisabled.value) {
     error.value = true;
     return;
   }
 
-  if (typeof props.onSubmit !== Function) {
-    return;
-  }
-
   error.value = false;
-  onSubmit(form.value);
 
-  // Clear form values
-  form.value.cardType = "";
-  form.value.title = "";
-  form.value.description = "";
-  form.value.image = null;
-  form.value.options = [""];
+  const finalOptions = form.value.options.map((option) => ({
+    text: option,
+    checked: false,
+  }));
 
-  onClose();
+  // Convert image file to Base64 if it's a File object
+  if (form.value.image instanceof File) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64Image = reader.result;
+
+      notesStore.addNote({
+        id: uuidv4(),
+        cardType: form.value.cardType,
+        title: form.value.title,
+        description: form.value.description,
+        image: base64Image, // Use Base64 string
+        options: finalOptions,
+      });
+
+      // Clear form values
+      form.value.cardType = "";
+      form.value.title = "";
+      form.value.description = "";
+      form.value.image = null;
+      form.value.options = [""];
+
+      props.onClose();
+    };
+    reader.readAsDataURL(form.value.image);
+  } else {
+    // If image is already a Base64 string or URL
+    notesStore.addNote({
+      id: uuidv4(),
+      cardType: form.value.cardType,
+      title: form.value.title,
+      description: form.value.description,
+      image: form.value.image,
+      options: finalOptions,
+    });
+
+    // Clear form values
+    form.value.cardType = "";
+    form.value.title = "";
+    form.value.description = "";
+    form.value.image = null;
+    form.value.options = [""];
+
+    props.onClose();
+  }
 };
 
 const closeModal = () => {
