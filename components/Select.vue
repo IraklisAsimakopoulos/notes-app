@@ -189,7 +189,8 @@ watch(
     if (newVal !== model.value) {
       model.value = newVal;
     }
-  }
+  },
+  { immediate: true }
 );
 
 const emit = defineEmits(["update:modelValue"]);
