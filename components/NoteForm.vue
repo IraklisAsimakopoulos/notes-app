@@ -7,7 +7,9 @@
       class="bg-[#fff] p-[22px] rounded-[16px] w-[496px] max-h-[634px] overflow-y-auto flex flex-col gap-[22px]"
     >
       <div class="flex justify-between items-center">
-        <h2 class="text-[22px] font-bold">Create New Note</h2>
+        <h2 class="text-[22px] font-bold">
+          {{ isUpdate ? "Update Note" : "Create New Note" }}
+        </h2>
         <Icon
           iconName="close"
           class="cursor-pointer text-[#0A0C11] w-[22px] h-[22px]"
@@ -22,16 +24,8 @@
           :options="typeOptions"
           :multiple="false"
           placeholder="Select type of card"
-          :label="null"
-          :supportingText="null"
         />
-        <Input
-          v-model="form.title"
-          :error="error"
-          placeholder="Header"
-          :label="null"
-          :supportingText="null"
-        />
+        <Input v-model="form.title" :error="error" placeholder="Header" />
         <ImageUploader
           v-if="form.cardType === '2'"
           v-model="form.image"
@@ -41,8 +35,6 @@
           v-model="form.description"
           :error="error"
           placeholder="Description"
-          :label="null"
-          :supportingText="null"
         />
         <h3
           v-if="form.cardType === '3'"
@@ -54,38 +46,34 @@
           <div
             v-for="(option, index) in form.options"
             :key="index"
-            class="flex items-center gap-[10px]"
+            class="flex items-center gap-2"
           >
             <Input
               v-model="form.options[index]"
               :error="error"
               placeholder="Text placeholder"
-              :label="null"
-              :supportingText="null"
             />
             <Icon
+              v-if="form.options.length > 1"
               @click="removeOption(index)"
               iconName="do_not_disturb_on"
-              :class="[
-                'cursor-pointer',
-                {
-                  hidden: form.options.length <= 1,
-                },
-              ]"
+              class="cursor-pointer"
             />
           </div>
           <Button @click="addOption" icon="add" variant="green">
             Add option
           </Button>
         </div>
-        <Button type="submit" :disabled="isDisabled"> Create </Button>
+        <Button type="submit" :disabled="isDisabled">
+          {{ isUpdate ? "Update" : "Create" }}
+        </Button>
       </form>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useNotesStore } from "../store/useNotesStore";
 import { v4 as uuidv4 } from "uuid";
 
@@ -96,16 +84,14 @@ const typeOptions = [
 ];
 
 const props = defineProps({
-  open: {
-    type: Boolean,
-    default: false,
-  },
-  onClose: {
-    type: Function,
-  },
+  open: Boolean,
+  onClose: Function,
+  defaultValues: Object,
 });
 
 const error = ref(false);
+const notesStore = useNotesStore();
+const router = useRouter();
 
 const form = ref({
   cardType: "",
@@ -115,12 +101,43 @@ const form = ref({
   options: [""],
 });
 
+const isUpdate = computed(() => !!props.defaultValues);
+watch(
+  () => props.defaultValues,
+  (newValues) => {
+    if (newValues) {
+      form.value = {
+        ...newValues,
+        options:
+          newValues.cardType === "3"
+            ? newValues.options.map((option) => option.text)
+            : undefined,
+      };
+    }
+  },
+  { immediate: true }
+);
+
 const isDisabled = computed(() => {
   if (!form.value.cardType || !form.value.title || !form.value.description) {
     return true;
   }
 
   if (form.value.cardType === "2" && !form.value.image) {
+    return true;
+  }
+
+  if (form.value.cardType === "3" && !form.value.options && isUpdate.value) {
+    return true;
+  }
+
+  const isAnythingEmpty =
+    form.value.cardType === "3" &&
+    form.value.options?.some((option) => {
+      return option === null || option === "";
+    });
+
+  if (isAnythingEmpty) {
     return true;
   }
 
@@ -135,9 +152,7 @@ const isDisabled = computed(() => {
   return false;
 });
 
-const notesStore = useNotesStore();
-
-const handleSubmit = () => {
+const handleSubmit = async () => {
   if (isDisabled.value) {
     error.value = true;
     return;
@@ -145,69 +160,68 @@ const handleSubmit = () => {
 
   error.value = false;
 
-  const finalOptions = form.value.options.map((option) => ({
+  const finalOptions = form.value.options?.map((option) => ({
     text: option,
     checked: false,
   }));
 
-  // Convert image file to Base64 if it's a File object
-  if (form.value.image instanceof File) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64Image = reader.result;
-
-      notesStore.addNote({
-        id: uuidv4(),
-        cardType: form.value.cardType,
-        title: form.value.title,
-        description: form.value.description,
-        image: base64Image, // Use Base64 string
-        options: finalOptions,
-      });
-
-      // Clear form values
-      form.value.cardType = "";
-      form.value.title = "";
-      form.value.description = "";
-      form.value.image = null;
-      form.value.options = [""];
-
-      props.onClose();
-    };
-    reader.readAsDataURL(form.value.image);
-  } else {
-    // If image is already a Base64 string or URL
-    notesStore.addNote({
-      id: uuidv4(),
+  const processNote = (imageData) => {
+    const noteData = {
+      id: isUpdate.value ? form.value.id : uuidv4(),
       cardType: form.value.cardType,
       title: form.value.title,
       description: form.value.description,
-      image: form.value.image,
-      options: finalOptions,
-    });
+      image: form.value.cardType === "2" ? imageData : undefined,
+      options: form.value.cardType === "3" ? finalOptions : undefined,
+    };
 
-    // Clear form values
-    form.value.cardType = "";
-    form.value.title = "";
-    form.value.description = "";
-    form.value.image = null;
-    form.value.options = [""];
+    if (isUpdate.value) {
+      const newUpdatedNote = notesStore.editNote(noteData);
 
-    props.onClose();
+      if (newUpdatedNote && newUpdatedNote.slug !== form.value.slug) {
+        router.push({
+          name: "note-slug",
+          params: { slug: newUpdatedNote.slug },
+        });
+      }
+    } else {
+      notesStore.addNote(noteData);
+    }
+
+    closeModal();
+  };
+
+  if (form.value.cardType === "2" && form.value.image instanceof File) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64Image = reader.result;
+      processNote(base64Image);
+    };
+    reader.readAsDataURL(form.value.image);
+  } else {
+    processNote(form.value.image);
   }
 };
 
 const closeModal = () => {
   props.onClose();
-  form.value.cardType = "";
-  form.value.title = "";
-  form.value.description = "";
-  form.value.image = null;
-  form.value.options = [""];
+  if (!isUpdate) {
+    form.value = {
+      cardType: "",
+      title: "",
+      description: "",
+      image: null,
+      options: [""],
+    };
+  }
 };
 
 const addOption = () => {
-  form.value.options.push("");
+  if (Array.isArray(form.value.options)) {
+    form.value.options.push("");
+  } else {
+    form.value.options = [""];
+  }
 };
 
 const removeOption = (index) => {
