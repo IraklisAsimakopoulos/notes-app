@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center gap-2">
+  <div class="flex items-center gap-2" ref="dropdownRef">
     <div
       v-for="(type, index) in selectedTypes"
       :key="index"
@@ -25,6 +25,7 @@
     >
       Filter
       <div
+        @click.stop
         v-if="isDropdownOpen"
         class="text-[#0A0C11] absolute top-[100%] left-0 mt-2 w-[152px] bg-[#ffffff] rounded-[16px] shadow-[0_4px_4px_-4px_#0C0C0D0D,0_16px_32px_-4px_#0C0C0D1A] z-10 overflow-hidden"
       >
@@ -81,8 +82,6 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
-
 const props = defineProps({
   onChange: {
     type: [Function, null],
@@ -98,6 +97,10 @@ const typeOptions = [
 
 const selectedValues = ref(["1", "2", "3"]);
 const isDropdownOpen = ref(false);
+
+const dropdownRef = useClickOutside(() => {
+  isDropdownOpen.value = false;
+});
 
 const selectedTypes = computed(() => {
   return typeOptions.filter((option) =>

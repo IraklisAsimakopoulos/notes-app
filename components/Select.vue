@@ -134,8 +134,6 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted } from "vue";
-
 const props = defineProps({
   modelValue: {
     type: [String, Array],
@@ -153,16 +151,21 @@ const props = defineProps({
     ],
   },
   multiple: { type: Boolean, default: true },
-  label: { type: [String, null], default: "Default label" },
-  placeholder: { type: [String, null], default: "Select..." },
-  supportingText: { type: [String, null], default: "Default supporting text" },
+  label: {
+    type: [String, null],
+    default: null,
+  },
+  placeholder: { type: [String, null], default: null },
+  supportingText: { type: [String, null], default: null },
   disabled: { type: Boolean, default: false },
   error: { type: Boolean, default: false },
 });
 
 const isFocused = ref(false);
 const model = ref(props.modelValue);
-const dropdownRef = ref(null);
+const dropdownRef = useClickOutside(() => {
+  isFocused.value = false;
+});
 
 // Computed property to show if there is a selected value
 const modelValueHasValue = computed(() => {
@@ -224,21 +227,4 @@ const removeOption = (option) => {
   model.value = updatedValue;
   emit("update:modelValue", model.value);
 };
-
-// Close dropdown if clicked outside
-const handleClickOutside = (event) => {
-  if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
-    isFocused.value = false;
-  }
-};
-
-onMounted(() => {
-  // Add event listener for clicks outside
-  document.addEventListener("click", handleClickOutside);
-});
-
-onUnmounted(() => {
-  // Remove event listener to prevent memory leaks
-  document.removeEventListener("click", handleClickOutside);
-});
 </script>
