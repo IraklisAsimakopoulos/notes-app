@@ -85,6 +85,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-Iraklis Asimakopoulos-Kouloulias - [iraklis.asimakopoulos@gmail.com](iraklis.asimakopoulos@gmail.com)
+Iraklis Asimakopoulos-Kouloulias - [iraklis.asimakopoulos@gmail.com](mailto:iraklis.asimakopoulos@gmail.com)
 
 Project Link: [https://github.com/IraklisAsimakopoulos/notes-app](https://github.com/IraklisAsimakopoulos/notes-app)
