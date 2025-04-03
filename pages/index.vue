@@ -29,7 +29,6 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from "vue";
 import { useNotesStore } from "../store/useNotesStore";
 
 const notesStore = useNotesStore();

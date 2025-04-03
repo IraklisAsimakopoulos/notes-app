@@ -20,8 +20,6 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
-
 const props = defineProps({
   variant: {
     type: String,

@@ -51,7 +51,6 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 const model = defineModel();
 
 const props = defineProps({
@@ -60,16 +59,16 @@ const props = defineProps({
     default: "",
   },
   label: {
-    type: String,
-    default: "Default",
+    type: [String, null],
+    default: null,
   },
   placeholder: {
-    type: String,
-    default: "Text Placeholder",
+    type: [String, null],
+    default: null,
   },
   supportingText: {
-    type: String,
-    default: "Supporting text",
+    type: [String, null],
+    default: null,
   },
   error: {
     type: Boolean,

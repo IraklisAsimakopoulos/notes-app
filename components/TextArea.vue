@@ -54,7 +54,6 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 const model = defineModel();
 const textAreaClasses = "w-full outline-none";
 
@@ -65,15 +64,15 @@ const props = defineProps({
   },
   label: {
     type: String,
-    default: "Default",
+    default: null,
   },
   placeholder: {
     type: String,
-    default: "Text Placeholder",
+    default: null,
   },
   supportingText: {
     type: String,
-    default: "Supporting text",
+    default: null,
   },
   error: {
     type: Boolean,
