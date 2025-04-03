@@ -1,75 +1,90 @@
-# Nuxt Minimal Starter
+# Notes App
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Description
 
-## Setup
+The Notes App is a web application built with Nuxt 3, Tailwind CSS, and Pinia for state management.
 
-Make sure to install dependencies:
+It allows users to create, view, edit, and delete notes. Each note can be categorized into one of three types, and users can filter notes by type on the home page.
 
-```bash
-# npm
-npm install
+The app also keeps the store alive through localStorage, ensuring that your notes persist even after refreshing the page.
 
-# pnpm
-pnpm install
+## Features
 
-# yarn
-yarn install
+- **Home Page**: View all notes with filtering options by type.
+- **Add Note**: Create a new note by selecting a type and filling in the necessary details.
+- **View Note**: Access individual notes via dynamic routing (`note/:slug`) to see details.
+- **Edit Note**: Edit existing notes with a prefilled form.
+- **Delete Note**: Remove notes from the application.
 
-# bun
-bun install
-```
+## Screenshots
 
-## Development Server
+![Home Page](assets/homepage-screenshot.png)
+_Home page with notes and filter options_
 
-Start the development server on `http://localhost:3000`:
+![Add Note Form](assets/addnote-screenshot.png)
+_Form to add a new note_
 
-```bash
-# npm
-npm run dev
+![View Note](assets/viewnote-screenshot.png)
+_Viewing a note with options to edit or delete_
 
-# pnpm
-pnpm dev
+![Edit Note Form](assets/editnote-screenshot.png)
+_Form to edit a note_
 
-# yarn
-yarn dev
+![Dialog](assets/dialog-screenshot.png)
+_Dialog to delete a note_
 
-# bun
-bun run dev
-```
+## Installation
 
-## Production
+1. **Clone the repository**:
 
-Build the application for production:
+   ```bash
+   git clone https://github.com/IraklisAsimakopoulos/notes-app.git
+   ```
 
-```bash
-# npm
-npm run build
+2. **Navigate to the project directory**:
 
-# pnpm
-pnpm build
+   ```bash
+   cd notes-app
+   ```
 
-# yarn
-yarn build
+3. **Install dependencies**:
 
-# bun
-bun run build
-```
+   ```bash
+   npm install
+   ```
 
-Locally preview production build:
+## Usage
 
-```bash
-# npm
-npm run preview
+1. **Start the development server**:
 
-# pnpm
-pnpm preview
+   ```bash
+   npm run dev
+   ```
 
-# yarn
-yarn preview
+2. **Open your browser** and go to `http://localhost:3000` to view the app.
 
-# bun
-bun run preview
-```
+## Built With
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+- **Nuxt 3**: A modern Vue.js framework for building server-side rendered applications.
+- **Tailwind CSS**: A utility-first CSS framework for styling.
+- **Pinia**: A state management library for Vue.js applications.
+
+## Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/your-feature`).
+3. Commit your changes (`git commit -m 'Add some feature'`).
+4. Push to the branch (`git push origin feature/your-feature`).
+5. Open a pull request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+Iraklis Asimakopoulos-Kouloulias - [iraklis.asimakopoulos@gmail.com](iraklis.asimakopoulos@gmail.com)
+
+Project Link: [https://github.com/IraklisAsimakopoulos/notes-app](https://github.com/IraklisAsimakopoulos/notes-app)
