@@ -47,12 +47,23 @@ export const useNotesStore = defineStore("notes", {
       this.notes.push({ ...note, slug });
       this.persistToLocalStorage();
     },
-    editNote(id, updatedNote) {
-      const index = this.notes.findIndex((note) => note.id === id);
+    editNote(updatedData) {
+      if (!updatedData.id) {
+        return;
+      }
+      const index = this.notes.findIndex((note) => note.id === updatedData.id);
       if (index !== -1) {
-        const slug = generateUniqueSlug(updatedNote.title, this.notes);
-        this.notes[index] = { ...updatedNote, slug };
+        const updatedNote = { ...this.notes[index], ...updatedData };
+        if (
+          updatedNote.title &&
+          updatedNote.title !== this.notes[index].title
+        ) {
+          updatedNote.slug = generateUniqueSlug(updatedNote.title, this.notes);
+        }
+        this.notes[index] = updatedNote;
         this.persistToLocalStorage();
+
+        return updatedNote;
       }
     },
     deleteNote(id) {
@@ -66,6 +77,13 @@ export const useNotesStore = defineStore("notes", {
       if (!typesString) return [];
       const types = typesString.split(",").map((type) => type.trim());
       return this.notes.filter((note) => types.includes(note.cardType));
+    },
+    toggleOptionChecked(id, optionIndex) {
+      const note = this.notes.find((note) => note.id === id);
+      if (note && note.options && note.options[optionIndex]) {
+        note.options[optionIndex].checked = !note.options[optionIndex].checked;
+        this.persistToLocalStorage();
+      }
     },
   },
 });
