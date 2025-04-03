@@ -126,13 +126,17 @@ const isClient = process.client;
 watchEffect(() => {
   if (!isClient) return;
 
-  if (previewUrl.value) {
+  if (previewUrl.value && selectedFile.value instanceof File) {
     URL.revokeObjectURL(previewUrl.value);
     previewUrl.value = "";
   }
 
   if (selectedFile.value) {
-    previewUrl.value = URL.createObjectURL(selectedFile.value);
+    if (selectedFile.value instanceof File) {
+      previewUrl.value = URL.createObjectURL(selectedFile.value);
+    } else {
+      previewUrl.value = selectedFile.value;
+    }
   }
 });
 
